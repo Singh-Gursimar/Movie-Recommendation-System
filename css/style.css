@@ -318,6 +318,7 @@ footer {
 
 /* No Recommendations */
 .no-recommendations {
-    background: white;
+    background: darkslategray;
     padding: 40px;
     border-radius: 4px;
+}
