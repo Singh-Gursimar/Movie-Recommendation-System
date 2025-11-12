@@ -98,14 +98,17 @@ function ratingSimilarity(rating1, rating2) {
     return 1 - (difference / 10);
 }
 
-// Combined similarity score using all three algorithms
+// Combined similarity score using all three algorithms with optimized weights
 function combinedSimilarity(str1, str2) {
     const jaccard = jaccardSimilarity(str1, str2);
     const cosine = cosineSimilarity(str1, str2);
     const levenshtein = levenshteinSimilarity(str1, str2);
     
-    // Weighted average (you can adjust weights as needed)
-    return (jaccard * 0.3 + cosine * 0.4 + levenshtein * 0.3);
+    // Optimized weights based on algorithm performance:
+    // - Cosine (50%): Best for semantic similarity and word frequency
+    // - Jaccard (30%): Good for unique word overlap
+    // - Levenshtein (20%): Good for typos but less important for recommendations
+    return (cosine * 0.5) + (jaccard * 0.3) + (levenshtein * 0.2);
 }
 
 // Calculate similarity between a movie and query based on multiple attributes
