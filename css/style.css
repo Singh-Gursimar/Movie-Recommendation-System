@@ -3,8 +3,7 @@
  * CS 2420 Data Structures Project
  * Fall 2024
  * 
- * Going for a modern dark theme with purple/teal gradients
- * Learned a lot about CSS Grid and Flexbox doing this!
+ * Dark theme with red accents
  */
 
 * {
@@ -14,30 +13,24 @@
 }
 
 :root {
-    --primary-color: #ff6b6b;
-    --primary-hover: #ff5252;
-    --secondary-color: #4ecdc4;
-    --dark-bg: #0f0f1e;
-    --card-bg: #1a1a2e;
-    --card-hover: #232341;
+    --primary-red: #dc2626;
+    --primary-hover: #b91c1c;
+    --dark-bg: #0a0a0a;
+    --card-bg: #1a1a1a;
+    --card-hover: #252525;
     --text-primary: #ffffff;
-    --text-secondary: #a0a0b8;
-    --text-muted: #6c6c8e;
-    --accent-gold: #ffd93d;
-    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --border-radius: 16px;
-    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --accent-gold: #fbbf24;
+    --border-color: #262626;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--dark-bg);
-    background-image: 
-        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 50%);
     color: var(--text-primary);
     min-height: 100vh;
     padding: 20px;
@@ -59,10 +52,7 @@ header {
 .header-content h1 {
     font-size: 4rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-red);
     margin-bottom: 12px;
     letter-spacing: -1px;
 }
@@ -90,12 +80,12 @@ header {
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: var(--transition);
-    border: 2px solid transparent;
+    border: 2px solid var(--border-color);
 }
 
 .search-box:focus-within {
-    border-color: var(--primary-color);
-    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+    border-color: var(--primary-red);
+    box-shadow: 0 8px 32px rgba(220, 38, 38, 0.3);
 }
 
 .search-icon {
@@ -127,7 +117,7 @@ header {
     padding: 16px 32px;
     font-size: 1rem;
     font-weight: 600;
-    background: var(--gradient-2);
+    background: var(--primary-red);
     color: var(--text-primary);
     border: none;
     border-radius: 12px;
@@ -140,8 +130,9 @@ header {
 }
 
 #searchBtn:hover {
+    background: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(245, 87, 108, 0.4);
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
 }
 
 #searchBtn:active {
@@ -167,16 +158,13 @@ header {
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--gradient-2);
+    background: var(--primary-red);
 }
 
 .selected-movie h2 {
     font-size: 2rem;
     margin-bottom: 20px;
-    background: var(--gradient-2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-red);
 }
 
 .selected-movie .movie-info {
@@ -234,10 +222,7 @@ header {
 .recommendations-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    background: var(--gradient-3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-red);
 }
 
 .algorithm-badge {
@@ -247,13 +232,13 @@ header {
     background: var(--card-bg);
     padding: 12px 20px;
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
 
 .algorithm-badge svg {
-    color: var(--secondary-color);
+    color: var(--primary-red);
 }
 
 /* Movie Cards */
@@ -270,7 +255,7 @@ header {
     transition: var(--transition);
     cursor: pointer;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -283,7 +268,7 @@ header {
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--gradient-1);
+    background: var(--primary-red);
     opacity: 0;
     transition: var(--transition);
     z-index: 0;
@@ -296,7 +281,7 @@ header {
 .movie-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
-    border-color: rgba(255, 107, 107, 0.3);
+    border-color: var(--primary-red);
 }
 
 .movie-card .card-content {
@@ -312,13 +297,13 @@ header {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: var(--gradient-2);
+    background: var(--primary-red);
     color: var(--text-primary);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
     z-index: 2;
 }
 
@@ -367,8 +352,8 @@ header {
 }
 
 .movie-card .genre-tag {
-    background: rgba(78, 205, 196, 0.15);
-    color: var(--secondary-color);
+    background: rgba(220, 38, 38, 0.15);
+    color: var(--primary-red);
     padding: 4px 12px;
     border-radius: 12px;
     font-weight: 500;
@@ -395,7 +380,7 @@ header {
     width: 60px;
     height: 60px;
     border: 4px solid rgba(255, 255, 255, 0.1);
-    border-top: 4px solid var(--primary-color);
+    border-top: 4px solid var(--primary-red);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin: 0 auto 24px;
@@ -414,8 +399,8 @@ header {
 
 /* Error Message */
 .error-message {
-    background: rgba(255, 107, 107, 0.1);
-    border: 2px solid var(--primary-color);
+    background: rgba(220, 38, 38, 0.1);
+    border: 2px solid var(--primary-red);
     color: var(--text-primary);
     padding: 24px;
     border-radius: var(--border-radius);
@@ -429,7 +414,7 @@ footer {
     text-align: center;
     padding: 40px 0 20px;
     margin-top: 80px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--border-color);
 }
 
 .footer-content p {
@@ -449,7 +434,7 @@ footer {
     padding: 60px 40px;
     border-radius: var(--border-radius);
     text-align: center;
-    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border: 2px dashed var(--border-color);
 }
 
 .no-recommendations p {
