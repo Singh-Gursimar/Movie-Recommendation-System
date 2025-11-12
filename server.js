@@ -77,9 +77,14 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🎬 Movie Recommendation Server running on port ${PORT}`);
-    console.log(`📍 Local: http://localhost:${PORT}`);
-    console.log(`🔑 API Key configured: ${OMDB_API_KEY ? 'Yes ✅' : 'No ❌'}`);
-});
+// Start server (for local development)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`🎬 Movie Recommendation Server running on port ${PORT}`);
+        console.log(`📍 Local: http://localhost:${PORT}`);
+        console.log(`🔑 API Key configured: ${OMDB_API_KEY ? 'Yes ✅' : 'No ❌'}`);
+    });
+}
+
+// Export for Vercel serverless
+module.exports = app;
