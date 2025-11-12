@@ -171,13 +171,18 @@ async function processKaggleData() {
         
         console.log(`\n✅ Total unique movies processed: ${allMovies.length}\n`);
         
+        // Filter out movies with rating 5.0 or below
+        const filteredMovies = allMovies.filter(movie => movie.rating > 5.0);
+        console.log(`🎯 Movies with rating > 5.0: ${filteredMovies.length}`);
+        console.log(`❌ Removed ${allMovies.length - filteredMovies.length} movies with rating ≤ 5.0\n`);
+        
         // Sort by rating (highest first)
-        allMovies.sort((a, b) => b.rating - a.rating);
+        filteredMovies.sort((a, b) => b.rating - a.rating);
         
-        // Use ALL movies instead of limiting to 1000
-        const finalMovies = allMovies;
+        // Use filtered movies
+        const finalMovies = filteredMovies;
         
-        console.log(`📊 Including all ${finalMovies.length} movies in the database\n`);
+        console.log(`📊 Including ${finalMovies.length} movies in the database\n`);
         
         // Show sample
         console.log('📊 Sample movie:');
