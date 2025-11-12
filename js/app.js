@@ -41,16 +41,15 @@ async function checkApiConfiguration() {
 // Load movie data from JSON file (as fallback)
 async function loadMovieData() {
     try {
-        showLoading(true);
+        console.log('📊 Loading movie database...');
         const response = await fetch('data/movies.json');
         if (!response.ok) {
             throw new Error('Failed to load movie data');
         }
         moviesData = await response.json();
-        showLoading(false);
+        console.log(`✅ Loaded ${moviesData.length} movies`);
         hideError();
     } catch (error) {
-        showLoading(false);
         if (!useOmdbApi) {
             showError('Failed to load movie database. Please check if movies.json exists.');
         }
