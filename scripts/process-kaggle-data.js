@@ -172,9 +172,20 @@ async function processKaggleData() {
         console.log(`\n✅ Total unique movies processed: ${allMovies.length}\n`);
         
         // Filter out movies with rating 5.0 or below
-        const filteredMovies = allMovies.filter(movie => movie.rating > 5.0);
+        let filteredMovies = allMovies.filter(movie => movie.rating > 5.0);
         console.log(`🎯 Movies with rating > 5.0: ${filteredMovies.length}`);
         console.log(`❌ Removed ${allMovies.length - filteredMovies.length} movies with rating ≤ 5.0\n`);
+        
+        // Filter out movies without descriptions
+        const beforeDescFilter = filteredMovies.length;
+        filteredMovies = filteredMovies.filter(movie => 
+            movie.description && 
+            movie.description.trim() !== '' && 
+            movie.description !== 'No description available.' &&
+            movie.description !== 'Add a Plot'
+        );
+        console.log(`📝 Movies with valid descriptions: ${filteredMovies.length}`);
+        console.log(`❌ Removed ${beforeDescFilter - filteredMovies.length} movies without descriptions\n`);
         
         // Sort by rating (highest first)
         filteredMovies.sort((a, b) => b.rating - a.rating);
