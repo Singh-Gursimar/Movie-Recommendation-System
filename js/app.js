@@ -1,10 +1,18 @@
-// Global variables
-let moviesData = [];
-let selectedMovie = null;
-let movieCache = new Map(); // Cache for OMDb API results
-let useOmdbApi = false;
+/**
+ * Movie Recommendation System - Main Application
+ * CS 2420 Data Structures Project
+ * 
+ * This handles all the frontend logic - searching, displaying results, etc.
+ * Also connects to the backend to keep the API key secure!
+ */
 
-// DOM Elements
+// Global variables
+let moviesData = [];  // Array to store all our movies
+let selectedMovie = null;  // The movie user selected
+let movieCache = new Map();  // Cache API results so we don't make duplicate requests
+let useOmdbApi = false;  // Whether we can use the OMDb API
+
+// Get references to HTML elements
 const movieInput = document.getElementById('movieInput');
 const searchBtn = document.getElementById('searchBtn');
 const selectedMovieDiv = document.getElementById('selectedMovie');

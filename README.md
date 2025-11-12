@@ -1,158 +1,313 @@
-# 🎬 Movie Recommendation System
+# 🎬 Movie Recommendation System# 🎬 Movie Recommendation System
 
-A sophisticated Movie Recommendation System that uses advanced similarity algorithms to suggest movies based on user preferences. Built with HTML, CSS, JavaScript, and Node.js backend, this system implements **Jaccard Similarity**, **Cosine Similarity**, and **Levenshtein Distance** algorithms to provide accurate movie recommendations.
 
-**Now with secure Node.js backend and OMDb API integration for thousands of movies!** 🎥
 
-![Movie Recommendation System](https://img.shields.io/badge/Status-Active-success)
+## CS 2420 - Data Structures Project | Fall 2024A sophisticated Movie Recommendation System that uses advanced similarity algorithms to suggest movies based on user preferences. Built with HTML, CSS, JavaScript, and Node.js backend, this system implements **Jaccard Similarity**, **Cosine Similarity**, and **Levenshtein Distance** algorithms to provide accurate movie recommendations.
+
+
+
+A movie recommendation system I built for my Data Structures class that uses similarity algorithms to suggest movies. This was my first time working with algorithms like this and building a full-stack web app!**Now with secure Node.js backend and OMDb API integration for thousands of movies!** 🎥
+
+
+
+## What It Does![Movie Recommendation System](https://img.shields.io/badge/Status-Active-success)
+
 ![License](https://img.shields.io/badge/License-MIT-blue)
-![HTML](https://img.shields.io/badge/HTML-5-orange)
-![CSS](https://img.shields.io/badge/CSS-3-blue)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow)
-![Node.js](https://img.shields.io/badge/Node.js-14+-green)
 
-## ✨ Features
+Type in a movie you like, and it'll recommend similar ones based on:![HTML](https://img.shields.io/badge/HTML-5-orange)
 
-- 🔍 **Smart Movie Search** - Find movies with fuzzy matching using Levenshtein distance
+- What the movie is about (description)![CSS](https://img.shields.io/badge/CSS-3-blue)
+
+- The genres![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow)
+
+- The ratings![Node.js](https://img.shields.io/badge/Node.js-14+-green)
+
+
+
+I'm using three different algorithms (Jaccard, Cosine, and Levenshtein) and combining them to get better results. Pretty cool how they all work together!## ✨ Features
+
+
+
+## Technologies Used- 🔍 **Smart Movie Search** - Find movies with fuzzy matching using Levenshtein distance
+
 - 🌐 **OMDb API Integration** - Search from thousands of real movies with IMDb ratings
-- � **Secure Backend** - Node.js/Express server keeps your API key safe
-- �🖼️ **Movie Posters** - Visual display with movie posters from OMDb
-- 🎯 **Multiple Recommendation Algorithms**:
-  - Jaccard Similarity - Set-based comparison
+
+- **Frontend**: HTML, CSS, JavaScript- � **Secure Backend** - Node.js/Express server keeps your API key safe
+
+- **Backend**: Node.js with Express- �🖼️ **Movie Posters** - Visual display with movie posters from OMDb
+
+- **API**: OMDb API (for movie data)- 🎯 **Multiple Recommendation Algorithms**:
+
+- **Database**: JSON file with 84,000+ movies from Kaggle  - Jaccard Similarity - Set-based comparison
+
   - Cosine Similarity - Vector-based similarity measurement
-  - Levenshtein Distance - Edit distance calculation
+
+## How to Run This  - Levenshtein Distance - Edit distance calculation
+
   - Combined Algorithm - Weighted combination of all three methods
-- 📊 **Similarity Scoring** - See how closely each recommendation matches your selected movie
-- 🎨 **Modern UI** - Netflix-inspired dark theme with responsive design
-- ⚡ **Fast Performance** - Client-side processing with intelligent caching
+
+### You'll Need:- 📊 **Similarity Scoring** - See how closely each recommendation matches your selected movie
+
+- Node.js installed on your computer- 🎨 **Modern UI** - Netflix-inspired dark theme with responsive design
+
+- An OMDb API key (it's free! get it at http://www.omdbapi.com/apikey.aspx)- ⚡ **Fast Performance** - Client-side processing with intelligent caching
+
 - 📱 **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
-- 💾 **Hybrid Mode** - Works with or without API (fallback to local database)
+
+### Steps:- 💾 **Hybrid Mode** - Works with or without API (fallback to local database)
+
 - � **Deploy Anywhere** - Easy deployment to Vercel, Render, or any Node.js host
 
-## 🚀 Quick Start
+1. Clone this repo
 
-### Prerequisites
+```bash## 🚀 Quick Start
+
+git clone https://github.com/Singh-Gursimar/Movie-Recommendation-System.git
+
+cd Movie-Recommendation-System### Prerequisites
+
+```
 
 - **Node.js** (v14 or higher) - [Download here](https://nodejs.org/)
-- A modern web browser
-- OMDb API key (free) - [Get it here](http://www.omdbapi.com/apikey.aspx)
 
-### Local Development
+2. Install the packages- A modern web browser
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Singh-Gursimar/Movie-Recommendation-System.git
-   cd Movie-Recommendation-System
-   ```
+```bash- OMDb API key (free) - [Get it here](http://www.omdbapi.com/apikey.aspx)
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+npm install
 
-3. **Set up environment variables**
+```### Local Development
+
+
+
+3. Create a `.env` file and add your API key1. **Clone the repository**
+
+```   ```bash
+
+API_KEY=your_api_key_here   git clone https://github.com/Singh-Gursimar/Movie-Recommendation-System.git
+
+PORT=3000   cd Movie-Recommendation-System
+
+```   ```
+
+
+
+4. Start the server2. **Install dependencies**
+
+```bash   ```bash
+
+npm start   npm install
+
+```   ```
+
+
+
+5. Go to `http://localhost:3000` in your browser3. **Set up environment variables**
+
    
-   Create a `.env` file in the root directory:
+
+That's it!   Create a `.env` file in the root directory:
+
    ```env
-   API_KEY=your_omdb_api_key_here
+
+## How It Works   API_KEY=your_omdb_api_key_here
+
    PORT=3000
-   ```
 
-4. **Setup Kaggle movie database** (Optional - for larger dataset)
-   
-   **If CSV is already in the repo:**
-   ```bash
+### The Algorithms (This was the fun part!)   ```
+
+
+
+**Jaccard Similarity** - Compares sets of words4. **Setup Kaggle movie database** (Optional - for larger dataset)
+
+- Looks at unique words in movie descriptions   
+
+- Calculates intersection over union   **If CSV is already in the repo:**
+
+- Good for finding movies with similar keywords   ```bash
+
    npm run process-kaggle
-   ```
-   
-   **If you need to download it:**
-   - Download from: https://www.kaggle.com/datasets/rajugc/imdb-movies-dataset-based-on-genre
+
+**Cosine Similarity** - Uses vector math   ```
+
+- Creates word frequency vectors   
+
+- Calculates the angle between them   **If you need to download it:**
+
+- Better for semantic similarity   - Download from: https://www.kaggle.com/datasets/rajugc/imdb-movies-dataset-based-on-genre
+
    - Place CSV in `data/` folder
-   - Run: `npm run process-kaggle`
 
-5. **Start the server**
-   ```bash
+**Levenshtein Distance** - Edit distance   - Run: `npm run process-kaggle`
+
+- Counts minimum character changes needed
+
+- Useful for fuzzy matching titles5. **Start the server**
+
+- Helps with typos   ```bash
+
    npm start
-   ```
 
-6. **Open your browser**
-   
-   Navigate to `http://localhost:3000`
+**Combined Algorithm** - My custom weighted approach   ```
 
-## 🔑 Getting Your OMDb API Key
+- 50% Cosine (best for content)
 
-1. Visit: http://www.omdbapi.com/apikey.aspx
+- 30% Jaccard (good for keywords)6. **Open your browser**
+
+- 20% Levenshtein (helps with titles)   
+
+- Then I add genre matching (30%) and rating similarity (20%)   Navigate to `http://localhost:3000`
+
+
+
+### Why I Made These Choices## 🔑 Getting Your OMDb API Key
+
+
+
+I tested all three algorithms separately and found that Cosine worked best for descriptions, so I gave it the highest weight. Jaccard was good for catching specific genre keywords, and Levenshtein helped when users misspelled movie titles.1. Visit: http://www.omdbapi.com/apikey.aspx
+
 2. Select **FREE** tier (1,000 daily requests)
-3. Enter your email and verify
+
+## Project Structure3. Enter your email and verify
+
 4. Copy the API key from your email
-5. Add it to your `.env` file
 
-## 🌐 Deployment
+```5. Add it to your `.env` file
 
-### Deploy to Vercel (Recommended - Free & Easy)
+Movie-Recommendation-System/
 
-1. **Install Vercel CLI** (optional)
-   ```bash
-   npm i -g vercel
-   ```
+├── index.html              # Main page## 🌐 Deployment
 
-2. **Deploy**
-   ```bash
-   vercel
-   ```
+├── css/
 
-3. **Add Environment Variable**
+│   └── style.css          # Styling (went for a modern dark theme)### Deploy to Vercel (Recommended - Free & Easy)
+
+├── js/
+
+│   ├── algorithms.js      # All the similarity algorithms1. **Install Vercel CLI** (optional)
+
+│   ├── app.js            # Frontend logic   ```bash
+
+│   └── config.js         # API config   npm i -g vercel
+
+├── data/   ```
+
+│   └── movies.json       # 84k movies (filtered to rating > 5.0)
+
+├── server.js             # Express backend (keeps API key safe)2. **Deploy**
+
+├── package.json          # Dependencies   ```bash
+
+└── .env                  # Your API key (don't commit this!)   vercel
+
+```   ```
+
+
+
+## Challenges I Faced3. **Add Environment Variable**
+
    - Go to your Vercel project settings
-   - Add `API_KEY` with your OMDb API key
+
+1. **First Time With Algorithms** - Understanding how Cosine Similarity works took me a while. Had to review linear algebra concepts from CS 2810.   - Add `API_KEY` with your OMDb API key
+
    - Redeploy
 
+2. **API Key Security** - Initially had the key in frontend code (oops!), learned about environment variables and backend proxying.
+
 **Or use Vercel's GitHub integration:**
-1. Push your code to GitHub
+
+3. **Performance** - With 84k movies, recommendations were slow at first. Fixed it by optimizing the algorithm and only calculating when needed.1. Push your code to GitHub
+
 2. Import project on [vercel.com](https://vercel.com)
-3. Add `API_KEY` environment variable
+
+4. **Dataset Cleanup** - The Kaggle data had movies with no descriptions ("Add a Plot") that I had to filter out.3. Add `API_KEY` environment variable
+
 4. Deploy!
+
+## What I Learned
 
 ### Deploy to Render (Alternative)
 
-1. Create account at [render.com](https://render.com)
-2. Create a new "Web Service"
-3. Connect your GitHub repository
-4. Set Build Command: `npm install`
-5. Set Start Command: `npm start`
+- How similarity algorithms actually work (not just theory anymore!)
+
+- Building a Node.js backend with Express1. Create account at [render.com](https://render.com)
+
+- Working with APIs securely2. Create a new "Web Service"
+
+- Managing large datasets in JSON3. Connect your GitHub repository
+
+- Git for version control4. Set Build Command: `npm install`
+
+- CSS Grid and Flexbox for responsive design5. Set Start Command: `npm start`
+
 6. Add environment variable: `API_KEY`
-7. Deploy!
 
-## 📖 Usage
+## Future Improvements7. Deploy!
 
-### Searching for Movies:
-1. **Enter any movie title** - "Inception", "Titanic", "Avatar", etc.
-2. **View detailed info** - See movie poster, rating, director, runtime, actors
-3. **Get recommendations** - Based on similarity algorithms
 
-### Using Different Algorithms:
+
+Some ideas I want to add:## 📖 Usage
+
+- [ ] User accounts to save favorite movies
+
+- [ ] More sophisticated NLP for descriptions### Searching for Movies:
+
+- [ ] Collaborative filtering (if I can figure it out)1. **Enter any movie title** - "Inception", "Titanic", "Avatar", etc.
+
+- [ ] Add movie trailers2. **View detailed info** - See movie poster, rating, director, runtime, actors
+
+- [ ] Better mobile experience3. **Get recommendations** - Based on similarity algorithms
+
+
+
+## Dataset Info### Using Different Algorithms:
+
 1. **Select an algorithm** from the dropdown (Jaccard, Cosine, Levenshtein, Combined)
-2. **Recommendations update automatically**
-3. **Compare results** across different algorithms
 
-### Exploring Recommendations:
+Using the IMDB Movies Dataset from Kaggle:2. **Recommendations update automatically**
+
+- Started with 127k movies across 16 genres3. **Compare results** across different algorithms
+
+- Filtered to 84k movies (removed rating ≤ 5.0 and missing descriptions)
+
+- Each movie has: title, year, rating, genres, description, director, runtime### Exploring Recommendations:
+
 1. **Search for a Movie**
-   - Type a movie title in the search box
+
+## API Credits   - Type a movie title in the search box
+
    - Click "Search" or press Enter
-   - The system will find the closest match using fuzzy search
+
+- **OMDb API** for movie posters and additional data   - The system will find the closest match using fuzzy search
+
+- **Kaggle** for the IMDB dataset
 
 2. **Select Recommendation Algorithm**
-   - Choose from Jaccard, Cosine, Levenshtein, or Combined
+
+## License   - Choose from Jaccard, Cosine, Levenshtein, or Combined
+
    - Recommendations update automatically when you change algorithms
 
+MIT License - feel free to use this for your own projects!
+
 3. **View Recommendations**
-   - See top 6 similar movies with similarity scores
+
+## Contact   - See top 6 similar movies with similarity scores
+
    - Click on any recommended movie to explore more recommendations
+
+If you have questions or find bugs, open an issue or reach out!
 
 Algorithms Explained
 
+---
+
 Jaccard Similarity
-Measures similarity between two sets based on their intersection and union.
-```
+
+*Built as a learning project for CS 2420 Data Structures*Measures similarity between two sets based on their intersection and union.
+
+*Fall 2024*```
+
 J(A, B) = |A ∩ B| / |A ∪ B|
 ```
 Best for : Comparing movies with distinct genre or keyword sets.

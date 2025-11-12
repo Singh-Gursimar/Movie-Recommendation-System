@@ -1,3 +1,12 @@
+/*
+ * Movie Recommendation System - Stylesheet
+ * CS 2420 Data Structures Project
+ * Fall 2024
+ * 
+ * Going for a modern dark theme with purple/teal gradients
+ * Learned a lot about CSS Grid and Flexbox doing this!
+ */
+
 * {
     margin: 0;
     padding: 0;
