@@ -1,0 +1,37 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+
+# Downloaded/temporary data files
+data/*.zip
+data/*.csv
+# But keep the processed movies.json
+
+# API Configuration (no longer needed - using backend now)
+# js/config.js is now safe to commit
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies (if you add npm later)
+node_modules/
+.vercel
