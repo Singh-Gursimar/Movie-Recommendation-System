@@ -212,7 +212,8 @@ function displaySelectedMovie(movie) {
         </div>
     ` : '';
     
-    const posterSrc = movie.poster ? movie.poster : generatePosterDataUrl(movie.title, movie.year, 300, 450);
+    // Always fetch fresh poster from API if available, otherwise generate placeholder
+    const posterSrc = useOmdbApi ? generatePosterDataUrl(movie.title, movie.year, 300, 450) : (movie.poster || generatePosterDataUrl(movie.title, movie.year, 300, 450));
 
     selectedMovieDiv.innerHTML = `
         <h2>🎯 ${movie.title}</h2>
@@ -240,8 +241,8 @@ function displaySelectedMovie(movie) {
         </div>
     `;
 
-    // Try to fetch poster from OMDb if we don't have one locally
-    if (!movie.poster && useOmdbApi) {
+    // Always fetch poster from OMDb when API is configured
+    if (useOmdbApi) {
         fetchFromOMDb(movie.title, movie.year).then(fetched => {
             if (fetched && fetched.poster) {
                 const img = selectedMovieDiv.querySelector('.selected-poster');
@@ -288,7 +289,8 @@ async function displayRecommendations() {
         const genreTags = movie.genre.slice(0, 3).map(g => 
             `<span class="genre-tag">${g}</span>`
         ).join('');
-        const posterSrc = movie.poster ? movie.poster : generatePosterDataUrl(movie.title, movie.year, 300, 420);
+        // Always use placeholder initially if API is available, will be replaced by real poster
+        const posterSrc = useOmdbApi ? generatePosterDataUrl(movie.title, movie.year, 300, 420) : (movie.poster || generatePosterDataUrl(movie.title, movie.year, 300, 420));
 
         return `
             <div class="movie-card" data-movie-id="${movie.id}" data-poster="${movie.poster ? posterSrc : ''}" onclick="selectMovieById('${movie.id}')">
@@ -315,26 +317,23 @@ async function displayRecommendations() {
 
     recommendationsSection.style.display = 'block';
 
-    // If OMDb is configured, try to fetch missing posters asynchronously
+    // If OMDb is configured, fetch fresh posters for all recommendations
     if (useOmdbApi) {
         const cards = movieListDiv.querySelectorAll('.movie-card');
         cards.forEach(async (card) => {
-            const posterAttr = card.getAttribute('data-poster');
-            if (!posterAttr || posterAttr === '') {
-                const movieId = card.getAttribute('data-movie-id');
-                let movie = moviesData.find(m => m.id === movieId || m.id == movieId);
-                if (!movie) return;
-                try {
-                    const fetched = await fetchFromOMDb(movie.title, movie.year);
-                    if (fetched && fetched.poster) {
-                        const img = card.querySelector('img.poster');
-                        if (img) img.src = fetched.poster;
-                        card.setAttribute('data-poster', fetched.poster);
-                        movie.poster = fetched.poster;
-                    }
-                } catch (e) {
-                    // ignore poster fetch errors
+            const movieId = card.getAttribute('data-movie-id');
+            let movie = moviesData.find(m => m.id === movieId || m.id == movieId);
+            if (!movie) return;
+            try {
+                const fetched = await fetchFromOMDb(movie.title, movie.year);
+                if (fetched && fetched.poster) {
+                    const img = card.querySelector('img.poster');
+                    if (img) img.src = fetched.poster;
+                    card.setAttribute('data-poster', fetched.poster);
+                    movie.poster = fetched.poster;
                 }
+            } catch (e) {
+                // ignore poster fetch errors, keep generated poster
             }
         });
     }
