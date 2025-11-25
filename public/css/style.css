@@ -3,7 +3,7 @@
  * CS 2420 Data Structures Project
  * Fall 2024
  * 
- * Simple clean theme
+ * Compact single-page layout
  */
 
 * {
@@ -13,46 +13,58 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #333;
-    padding: 20px;
-    line-height: 1.6;
+    padding: 0;
+    line-height: 1.4;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
 }
 
 /* Header */
 header {
     text-align: center;
-    margin-bottom: 40px;
-    padding: 20px 0;
+    padding: 15px 0 10px;
+    flex-shrink: 0;
 }
 
 header h1 {
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 10px;
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 3px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
 .subtitle {
-    font-size: 1rem;
-    color: #666;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.9);
 }
 
 /* Search Section */
 .search-section {
-    margin-bottom: 40px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
 }
 
 .search-box {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
     display: flex;
     gap: 10px;
+    background: white;
+    padding: 5px;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
 
 .search-icon {
@@ -61,206 +73,224 @@ header h1 {
 
 #movieInput {
     flex: 1;
-    padding: 12px 15px;
-    font-size: 1rem;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    background: white;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 50px;
+    background: transparent;
 }
 
 #movieInput:focus {
     outline: none;
-    border-color: #4CAF50;
 }
 
 #searchBtn {
-    padding: 12px 30px;
-    font-size: 1rem;
-    background: #4CAF50;
+    padding: 10px 25px;
+    font-size: 0.95rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 50px;
     cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s;
 }
 
 #searchBtn:hover {
-    background: #45a049;
+    transform: scale(1.05);
 }
 
 #searchBtn svg {
     display: none;
 }
 
-/* Selected Movie */
-.selected-movie {
-    background: white;
-    padding: 30px;
-    border-radius: 4px;
-    margin-bottom: 40px;
-    border: 1px solid #ddd;
+/* Main Content Area */
+.selected-movie,
+.recommendations {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
 }
 
-.selected-movie::before {
-    display: none;
+/* Selected Movie - Compact */
+.selected-movie {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    max-height: 35vh;
+    overflow-y: auto;
 }
 
 .selected-movie h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #764ba2;
+}
+
+/* Compact horizontal layout for selected movie */
+.selected-movie-top {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.selected-poster {
+    width: 120px;
+    height: 180px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    flex-shrink: 0;
 }
 
 .selected-movie .movie-info {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-/* Selected movie layout with poster */
-.selected-movie-top {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    margin-bottom: 20px;
-}
-
-.selected-poster {
-    width: 180px;
-    max-width: 30%;
-    height: auto;
-    border-radius: 4px;
-    object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    font-size: 0.85rem;
+    flex: 1;
 }
 
 .selected-movie .info-item {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 4px;
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 6px;
 }
 
 .selected-movie .info-label {
     color: #666;
-    font-size: 0.85rem;
-    margin-bottom: 5px;
-    font-weight: bold;
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+    font-weight: 600;
+    display: block;
 }
 
 .selected-movie .info-value {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #333;
 }
 
 .selected-movie .genre-tag {
-    background: #e0e0e0;
-    color: #333;
-    padding: 4px 10px;
-    border-radius: 3px;
-    margin-right: 5px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-right: 4px;
     display: inline-block;
+    font-size: 0.75rem;
 }
 
 .selected-movie .rating {
     color: #f39c12;
+    font-weight: bold;
 }
 
 .selected-movie .description {
     color: #555;
-    line-height: 1.6;
+    line-height: 1.4;
+    font-size: 0.85rem;
+    margin-top: 10px;
 }
 
-/* Recommendations */
+/* Recommendations - Compact */
 .recommendations {
-    margin-bottom: 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .recommendations-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
 }
 
 .recommendations-header h2 {
-    font-size: 2rem;
-    color: #333;
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
 .algorithm-badge {
-    background: #e0e0e0;
-    padding: 8px 15px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    color: #666;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: white;
+    backdrop-filter: blur(10px);
 }
 
 .algorithm-badge svg {
     display: none;
 }
 
-/* Movie Cards */
+/* Movie Cards - Smaller Grid */
 .movie-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    overflow-y: auto;
+    padding: 2px;
 }
 
 .movie-card {
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
-}
-
-.movie-card::before {
-    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .movie-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .movie-card .card-content {
     position: relative;
 }
 
-/* Poster inside recommendation card */
+/* Compact poster */
 .movie-card img.poster {
     width: 100%;
-    height: 420px;
+    height: 240px;
     object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 12px;
 }
 
 .movie-card .similarity-score {
     position: absolute;
-    top: 0;
-    right: 0;
-    background: #4CAF50;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 5px 12px;
-    border-radius: 3px;
-    font-size: 0.85rem;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
     font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .movie-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    font-size: 0.95rem;
+    margin: 8px 10px 5px;
     color: #333;
+    line-height: 1.2;
+    height: 2.4em;
+    overflow: hidden;
 }
 
 .movie-card .movie-meta {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin: 0 10px 6px;
     color: #666;
+    font-size: 0.75rem;
 }
 
 .movie-card .year {
@@ -273,39 +303,40 @@ header h1 {
 }
 
 .movie-card .genre {
-    margin-bottom: 10px;
+    margin: 0 10px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .movie-card .genre-tag {
-    background: #e0e0e0;
-    color: #333;
-    padding: 3px 8px;
-    border-radius: 3px;
-    font-size: 0.85rem;
+    background: #e8eaf6;
+    color: #5c6bc0;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
     display: inline-block;
-    margin-right: 5px;
+    margin-right: 3px;
 }
 
 .movie-card .description {
-    color: #555;
-    line-height: 1.5;
-    font-size: 0.95rem;
+    display: none;
 }
 
 /* Loading Spinner */
 .loading-spinner {
     text-align: center;
-    padding: 60px 20px;
+    padding: 40px 20px;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #4CAF50;
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 15px;
 }
 
 @keyframes spin {
@@ -314,37 +345,64 @@ header h1 {
 }
 
 .loading-spinner p {
-    color: #666;
+    color: white;
+    font-weight: 500;
 }
 
 /* Error Message */
 .error-message {
-    background: #ffebee;
-    border: 2px solid #f44336;
-    color: #c62828;
-    padding: 20px;
-    border-radius: 4px;
-    margin-bottom: 30px;
+    background: rgba(244, 67, 54, 0.95);
+    border: 2px solid #d32f2f;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
     text-align: center;
+    font-weight: 500;
 }
 
-/* Footer */
+/* Footer - Compact */
 footer {
     text-align: center;
-    padding: 30px 0;
-    margin-top: 60px;
-    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    flex-shrink: 0;
 }
 
 .footer-content p {
-    color: #666;
-    font-size: 0.9rem;
-    margin: 5px 0;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.75rem;
+    margin: 2px 0;
+}
+
+.api-status {
+    font-size: 0.7rem !important;
 }
 
 /* No Recommendations */
 .no-recommendations {
-    background: darkslategray;
-    padding: 40px;
-    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 10px;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.6);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.8);
 }
