@@ -19,14 +19,6 @@ npm start
 
 Open http://localhost:3000
 
-## Deploy to Vercel
-
-```bash
-vercel
-```
-
-Or use the GitHub integration on vercel.com
-
 ### Optional: OMDb API
 
 To get real movie posters, add `API_KEY` environment variable in Vercel settings with your OMDb API key.
