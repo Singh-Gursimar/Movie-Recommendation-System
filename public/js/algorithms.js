@@ -201,8 +201,9 @@ function combinedSimilarity(str1, str2) {
 // Main function to calculate how similar a movie is to the search query
 // This is where I combine everything together!
 function calculateMovieSimilarity(movie, query, algorithm = 'combined', referenceMovie = null) {
-    // Focus on description and genre keywords for semantic matching
-    const movieText = `${movie.description} ${movie.genre.join(' ')}`;
+    // Combine movie attributes into one string for comparison
+    // Description is repeated twice to give it more weight, title is at the end with less emphasis
+    const movieText = `${movie.description} ${movie.description} ${movie.genre.join(' ')} ${movie.title}`;
     
     let textSimilarity = 0;
     
@@ -224,14 +225,14 @@ function calculateMovieSimilarity(movie, query, algorithm = 'combined', referenc
     }
     
     // If we're comparing to a specific movie (not just text search)
-    // add genre and rating similarity
+    // add genre and rating similarity too
     if (referenceMovie) {
         const genreScore = genreSimilarity(movie.genre, referenceMovie.genre);
         const ratingScore = ratingSimilarity(movie.rating, referenceMovie.rating);
         
-        // Final score with weighted combination
-        // 40% genre, 40% text (description), 20% rating
-        return (genreScore * 0.40) + (textSimilarity * 0.40) + (ratingScore * 0.20);
+        // Final score is weighted combination
+        // 40% text similarity (description-focused), 25% genre match, 35% rating similarity
+        return (textSimilarity * 0.4) + (genreScore * 0.25) + (ratingScore * 0.35);
     }
     
     return textSimilarity;
