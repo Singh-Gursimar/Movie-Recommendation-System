@@ -9,7 +9,20 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); // Serve static files from root directory
+
+// Disable caching for development
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    next();
+});
+
+app.use(express.static('.', { 
+    etag: false,
+    lastModified: false,
+    maxAge: 0
+})); // Serve static files from root directory
 
 // API Configuration
 const OMDB_API_KEY = process.env.API_KEY;

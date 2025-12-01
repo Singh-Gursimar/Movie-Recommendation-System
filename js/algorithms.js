@@ -124,6 +124,13 @@ function ratingSimilarity(rating1, rating2) {
     return 1 - (difference / 10);
 }
 
+// Compare movie directors - exact match or not
+function directorSimilarity(director1, director2) {
+    if (!director1 || !director2) return 0;
+    // Case-insensitive exact match
+    return director1.toLowerCase() === director2.toLowerCase() ? 1 : 0;
+}
+
 // Combined Algorithm - My custom approach!
 // After testing, I found these weights work best:
 function combinedSimilarity(str1, str2) {
@@ -140,7 +147,8 @@ function combinedSimilarity(str1, str2) {
 // This is where I combine everything together!
 function calculateMovieSimilarity(movie, query, algorithm = 'combined', referenceMovie = null) {
     // Combine movie attributes into one string for comparison
-    const movieText = `${movie.title} ${movie.description} ${movie.genre.join(' ')}`;
+    // Focus only on description and genre - title is excluded to avoid title bias
+    const movieText = `${movie.description} ${movie.description} ${movie.genre.join(' ')}`;
     
     let textSimilarity = 0;
     
@@ -166,10 +174,11 @@ function calculateMovieSimilarity(movie, query, algorithm = 'combined', referenc
     if (referenceMovie) {
         const genreScore = genreSimilarity(movie.genre, referenceMovie.genre);
         const ratingScore = ratingSimilarity(movie.rating, referenceMovie.rating);
+        const directorScore = directorSimilarity(movie.director, referenceMovie.director);
         
         // Final score is weighted combination
-        // 50% text similarity, 30% genre match, 20% rating similarity
-        return (textSimilarity * 0.5) + (genreScore * 0.3) + (ratingScore * 0.2);
+        // 36.5% text (description), 25% genre, 35% rating, 3.5% director (1/10 of rating weight)
+        return (textSimilarity * 0.365) + (genreScore * 0.25) + (ratingScore * 0.35) + (directorScore * 0.035);
     }
     
     return textSimilarity;
