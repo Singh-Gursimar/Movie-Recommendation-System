@@ -6,100 +6,48 @@
  * Each one has its own strengths and weaknesses!
  */
 
-// Common English stopwords to filter out - these don't add much meaning
-const STOPWORDS = new Set([
-    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-    'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been',
-    'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
-    'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that',
-    'these', 'those', 'it', 'its', 'his', 'her', 'their', 'our'
-]);
-
-// Cache preprocessed text to avoid reprocessing
-const preprocessCache = new Map();
-
-// Helper to preprocess text: lowercase, remove stopwords, split into meaningful words
-function preprocessText(text) {
-    if (preprocessCache.has(text)) {
-        return preprocessCache.get(text);
-    }
-    
-    const result = text.toLowerCase()
-        .split(/\s+/)
-        .filter(word => word.length > 2 && !STOPWORDS.has(word) && /^[a-z]+$/.test(word));
-    
-    // Cache the result (limit cache size to prevent memory issues)
-    if (preprocessCache.size < 1000) {
-        preprocessCache.set(text, result);
-    }
-    
-    return result;
-}
-
 // Jaccard Similarity Algorithm
 // This one compares sets - basically looks at unique words and sees how many overlap
 // Formula: intersection / union
 function jaccardSimilarity(str1, str2) {
-    // Preprocess: remove stopwords and get meaningful words only
-    const set1 = new Set(preprocessText(str1));
-    const set2 = new Set(preprocessText(str2));
+    // Convert to lowercase and split into words
+    const set1 = new Set(str1.toLowerCase().split(/\s+/));
+    const set2 = new Set(str2.toLowerCase().split(/\s+/));
     
-    // Early return if either set is empty
-    if (set1.size === 0 || set2.size === 0) return 0;
+    // Find words that appear in both (intersection)
+    const intersection = new Set([...set1].filter(x => set2.has(x)));
     
-    // More efficient: count intersection, calculate union size without creating set
-    let intersectionCount = 0;
-    for (const item of set1) {
-        if (set2.has(item)) intersectionCount++;
-    }
+    // Combine all unique words from both (union)
+    const union = new Set([...set1, ...set2]);
     
-    // Union size = size1 + size2 - intersection
-    const unionSize = set1.size + set2.size - intersectionCount;
+    // Avoid division by zero
+    if (union.size === 0) return 0;
     
-    return unionSize === 0 ? 0 : intersectionCount / unionSize;
+    // Return the ratio
+    return intersection.size / union.size;
 }
 
 // Cosine Similarity Algorithm
 // This one uses vector math - creates frequency vectors and finds the angle between them
 // Took me a while to understand this one, had to review linear algebra!
 function cosineSimilarity(str1, str2) {
-    // Preprocess: remove stopwords and get meaningful words only
-    const words1 = preprocessText(str1);
-    const words2 = preprocessText(str2);
+    // Split into words
+    const words1 = str1.toLowerCase().split(/\s+/);
+    const words2 = str2.toLowerCase().split(/\s+/);
     
-    // Early return if either is empty
-    if (words1.length === 0 || words2.length === 0) return 0;
+    // Get all unique words from both strings
+    const vocabulary = [...new Set([...words1, ...words2])];
     
-    // Build frequency maps (much faster than repeated filtering)
-    const freq1 = new Map();
-    const freq2 = new Map();
+    // Create frequency vectors - count how many times each word appears
+    const vector1 = vocabulary.map(word => words1.filter(w => w === word).length);
+    const vector2 = vocabulary.map(word => words2.filter(w => w === word).length);
     
-    for (const word of words1) {
-        freq1.set(word, (freq1.get(word) || 0) + 1);
-    }
-    for (const word of words2) {
-        freq2.set(word, (freq2.get(word) || 0) + 1);
-    }
+    // Calculate dot product (sum of products)
+    const dotProduct = vector1.reduce((sum, val, i) => sum + val * vector2[i], 0);
     
-    // Calculate dot product and magnitudes in one pass
-    let dotProduct = 0;
-    let magnitude1 = 0;
-    let magnitude2 = 0;
-    
-    // Get all unique words
-    const allWords = new Set([...freq1.keys(), ...freq2.keys()]);
-    
-    for (const word of allWords) {
-        const count1 = freq1.get(word) || 0;
-        const count2 = freq2.get(word) || 0;
-        
-        dotProduct += count1 * count2;
-        magnitude1 += count1 * count1;
-        magnitude2 += count2 * count2;
-    }
-    
-    magnitude1 = Math.sqrt(magnitude1);
-    magnitude2 = Math.sqrt(magnitude2);
+    // Calculate magnitudes (length of vectors)
+    const magnitude1 = Math.sqrt(vector1.reduce((sum, val) => sum + val * val, 0));
+    const magnitude2 = Math.sqrt(vector2.reduce((sum, val) => sum + val * val, 0));
     
     // Avoid division by zero
     if (magnitude1 === 0 || magnitude2 === 0) return 0;
@@ -117,42 +65,32 @@ function levenshteinDistance(str1, str2) {
     const len1 = s1.length;
     const len2 = s2.length;
     
-    // Early termination: if strings are very different in length, skip expensive calculation
-    const lengthDiff = Math.abs(len1 - len2);
-    if (lengthDiff > Math.max(len1, len2) * 0.5) {
-        return Math.max(len1, len2);  // Return max length as worst case
-    }
+    // Create a 2D array (matrix) for dynamic programming
+    // dp[i][j] = minimum edits to transform first i chars of s1 to first j chars of s2
+    const dp = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
     
-    // Optimize memory: only need two rows instead of full matrix
-    let prevRow = Array(len2 + 1).fill(0);
-    let currRow = Array(len2 + 1).fill(0);
+    // Base cases: transforming from/to empty string
+    for (let i = 0; i <= len1; i++) dp[i][0] = i;  // delete all chars
+    for (let j = 0; j <= len2; j++) dp[0][j] = j;  // insert all chars
     
-    // Initialize first row
-    for (let j = 0; j <= len2; j++) prevRow[j] = j;
-    
-    // Fill the matrix using bottom-up approach with space optimization
+    // Fill the matrix using bottom-up approach
     for (let i = 1; i <= len1; i++) {
-        currRow[0] = i;
-        
         for (let j = 1; j <= len2; j++) {
             if (s1[i - 1] === s2[j - 1]) {
                 // Characters match, no edit needed
-                currRow[j] = prevRow[j - 1];
+                dp[i][j] = dp[i - 1][j - 1];
             } else {
                 // Take minimum of three operations
-                currRow[j] = Math.min(
-                    prevRow[j] + 1,        // deletion
-                    currRow[j - 1] + 1,    // insertion
-                    prevRow[j - 1] + 1     // substitution
+                dp[i][j] = Math.min(
+                    dp[i - 1][j] + 1,      // deletion
+                    dp[i][j - 1] + 1,      // insertion
+                    dp[i - 1][j - 1] + 1   // substitution
                 );
             }
         }
-        
-        // Swap rows
-        [prevRow, currRow] = [currRow, prevRow];
     }
     
-    return prevRow[len2];
+    return dp[len1][len2];
 }
 
 // Convert Levenshtein distance to similarity score (between 0 and 1)
@@ -201,8 +139,8 @@ function combinedSimilarity(str1, str2) {
     const levenshtein = levenshteinSimilarity(str1, str2);
     
     // Weighted combination - Cosine is best for descriptions
-    // 60% Cosine (best for semantic similarity), 30% Jaccard (word overlap), 10% Levenshtein (character-level)
-    return (cosine * 0.6) + (jaccard * 0.3) + (levenshtein * 0.1);
+    // 50% Cosine, 30% Jaccard, 20% Levenshtein
+    return (cosine * 0.5) + (jaccard * 0.3) + (levenshtein * 0.2);
 }
 
 // Main function to calculate how similar a movie is to the search query
@@ -247,56 +185,14 @@ function calculateMovieSimilarity(movie, query, algorithm = 'combined', referenc
 }
 
 // Find the movie title that's closest to what the user typed
-// Useful for handling typos and partial matches!
+// Useful for handling typos!
 function findClosestMatch(movies, searchTerm) {
     let bestMatch = null;
     let highestSimilarity = 0;
     
-    const searchLower = searchTerm.toLowerCase().trim();
-    
-    // Check each movie title with multiple strategies
+    // Check each movie title
     movies.forEach(movie => {
-        const titleLower = movie.title.toLowerCase();
-        let similarity = 0;
-        
-        // Strategy 1: Exact match (case-insensitive) = 100%
-        if (titleLower === searchLower) {
-            similarity = 1.0;
-        }
-        // Strategy 2: One contains the other = high score
-        else if (titleLower.includes(searchLower)) {
-            // Full substring match, score based on how much of title it covers
-            similarity = 0.85 + (searchLower.length / titleLower.length) * 0.15;
-        }
-        else if (searchLower.includes(titleLower)) {
-            similarity = 0.80;
-        }
-        // Strategy 3: Word overlap (handles "Star Wars" vs "Wars Star")
-        else {
-            const searchWords = new Set(searchLower.split(/\s+/).filter(w => w.length > 2));
-            const titleWords = new Set(titleLower.split(/\s+/).filter(w => w.length > 2));
-            
-            if (searchWords.size > 0 && titleWords.size > 0) {
-                // Count matching words
-                let matchingWords = 0;
-                for (const word of searchWords) {
-                    if (titleWords.has(word)) matchingWords++;
-                }
-                
-                // Jaccard-like score for word overlap
-                const wordOverlap = matchingWords / Math.max(searchWords.size, titleWords.size);
-                
-                // Also check Levenshtein for typos
-                const levenshtein = levenshteinSimilarity(movie.title, searchTerm);
-                
-                // Combine: 70% word overlap (better for partial matches), 30% fuzzy (better for typos)
-                similarity = (wordOverlap * 0.7) + (levenshtein * 0.3);
-            } else {
-                // Fallback to pure Levenshtein for single-word searches
-                similarity = levenshteinSimilarity(movie.title, searchTerm);
-            }
-        }
-        
+        const similarity = levenshteinSimilarity(movie.title, searchTerm);
         if (similarity > highestSimilarity) {
             highestSimilarity = similarity;
             bestMatch = movie;
@@ -306,119 +202,18 @@ function findClosestMatch(movies, searchTerm) {
     return { movie: bestMatch, similarity: highestSimilarity };
 }
 
-// Enhanced search that checks both title and content
-// Returns movies sorted by relevance with title matches prioritized
-function searchMovies(movies, searchTerm, maxResults = 10) {
-    const searchLower = searchTerm.toLowerCase().trim();
-    
-    return movies.map(movie => {
-        const titleLower = movie.title.toLowerCase();
-        let titleScore = 0;
-        let contentScore = 0;
-        
-        // Title matching (same logic as findClosestMatch)
-        if (titleLower === searchLower) {
-            titleScore = 1.0;
-        } else if (titleLower.includes(searchLower)) {
-            titleScore = 0.85 + (searchLower.length / titleLower.length) * 0.15;
-        } else if (searchLower.includes(titleLower)) {
-            titleScore = 0.80;
-        } else {
-            const searchWords = new Set(searchLower.split(/\s+/).filter(w => w.length > 2));
-            const titleWords = new Set(titleLower.split(/\s+/).filter(w => w.length > 2));
-            
-            if (searchWords.size > 0 && titleWords.size > 0) {
-                let matchingWords = 0;
-                for (const word of searchWords) {
-                    if (titleWords.has(word)) matchingWords++;
-                }
-                const wordOverlap = matchingWords / Math.max(searchWords.size, titleWords.size);
-                const levenshtein = levenshteinSimilarity(movie.title, searchTerm);
-                titleScore = (wordOverlap * 0.7) + (levenshtein * 0.3);
-            } else {
-                titleScore = levenshteinSimilarity(movie.title, searchTerm);
-            }
-        }
-        
-        // Content matching (description + genres)
-        const contentText = `${movie.description} ${movie.genre.join(' ')}`;
-        contentScore = combinedSimilarity(contentText, searchTerm);
-        
-        // Weighted combination: Title is 80% important for initial search, content 20%
-        const overallScore = (titleScore * 0.80) + (contentScore * 0.20);
-        
-        return {
-            ...movie,
-            searchScore: overallScore,
-            titleScore: titleScore,
-            contentScore: contentScore
-        };
-    })
-    .filter(m => m.searchScore > 0.1)  // Filter out very poor matches
-    .sort((a, b) => b.searchScore - a.searchScore)
-    .slice(0, maxResults);
-}
-
 // Main recommendation function - this is what gets called when you select a movie
 function getRecommendations(movies, selectedMovie, algorithm = 'combined', topN = 6) {
-    // Build a reference string from the selected movie (cached via preprocessing)
+    // Build a reference string from the selected movie
     const referenceText = `${selectedMovie.description} ${selectedMovie.genre.join(' ')}`;
     
-    // Pre-extract title words once for franchise matching
-    // Filter out common words but keep important franchise names
-    const refTitleWords = selectedMovie.title.toLowerCase()
-        .split(/[\s:]+/)  // Split on spaces and colons
-        .filter(w => {
-            // Keep words that are 3+ chars and not numbers/articles
-            return w.length >= 3 && 
-                   !/^[0-9]+$/.test(w) && 
-                   !['the', 'and', 'part', 'vol', 'volume'].includes(w);
-        });
-    const refTitleSet = new Set(refTitleWords);
-    
-    // First, filter to only movies that share at least one genre
-    const sameGenreMovies = movies.filter(movie => {
-        if (movie.id === selectedMovie.id) return false;  // Don't recommend the same movie!
-        // Check if any genres overlap
-        return movie.genre.some(g => selectedMovie.genre.includes(g));
-    });
-    
-    // If we have enough same-genre movies, only use those
-    // Otherwise fall back to all movies (but same-genre will still score higher)
-    const candidateMovies = sameGenreMovies.length >= topN * 2 ? sameGenreMovies : 
-        movies.filter(movie => movie.id !== selectedMovie.id);
-    
-    // Calculate similarity for all candidate movies and sort them
-    const recommendations = candidateMovies
-        .map(movie => {
-            // Calculate base similarity
-            const baseScore = calculateMovieSimilarity(movie, referenceText, algorithm, selectedMovie);
-            
-            // Franchise/sequel detection bonus
-            let franchiseBonus = 0;
-            if (refTitleWords.length > 0) {
-                const movieTitleLower = movie.title.toLowerCase();
-                let matchingWords = 0;
-                
-                for (const word of refTitleWords) {
-                    if (movieTitleLower.includes(word)) {
-                        matchingWords++;
-                    }
-                }
-                
-                // Calculate franchise bonus (0 to 0.25)
-                // Higher bonus if multiple words match (sequels/franchises)
-                if (matchingWords > 0) {
-                    const matchRatio = matchingWords / refTitleWords.length;
-                    franchiseBonus = matchRatio * 0.25;  // Up to 25% bonus
-                }
-            }
-            
-            return {
-                ...movie,
-                similarityScore: baseScore + franchiseBonus
-            };
-        })
+    // Calculate similarity for all movies and sort them
+    const recommendations = movies
+        .filter(movie => movie.id !== selectedMovie.id)  // Don't recommend the same movie!
+        .map(movie => ({
+            ...movie,
+            similarityScore: calculateMovieSimilarity(movie, referenceText, algorithm, selectedMovie)
+        }))
         .sort((a, b) => b.similarityScore - a.similarityScore)  // Highest similarity first
         .slice(0, topN);  // Get top N recommendations
     
