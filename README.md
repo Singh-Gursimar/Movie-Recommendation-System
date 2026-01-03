@@ -1,6 +1,6 @@
 # 🎬 Movie Recommendation System
 
-A movie recommendation web app using similarity algorithms. Built for CS 2420 Data Structures.
+A movie recommendation web app using similarity algorithms.
 
 ## Features
 
@@ -9,21 +9,6 @@ A movie recommendation web app using similarity algorithms. Built for CS 2420 Da
 - 🖼️ Movie posters (client-side generated, no API needed)
 - 📊 Similarity scores for each recommendation
 - ⚡ Fast client-side processing
-
-## Quick Start
-
-```bash
-npm install
-npm start
-```
-
-Open http://localhost:3000
-
-### Optional: OMDb API
-
-To get real movie posters, add `API_KEY` environment variable in Vercel settings with your OMDb API key.
-
-Get free key: http://www.omdbapi.com/apikey.aspx
 
 ## How It Works
 
