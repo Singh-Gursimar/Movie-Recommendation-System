@@ -212,8 +212,8 @@ function displaySelectedMovie(movie) {
         </div>
     ` : '';
     
-    // Always fetch fresh poster from API if available, otherwise generate placeholder
-    const posterSrc = useOmdbApi ? generatePosterDataUrl(movie.title, movie.year, 300, 450) : (movie.poster || generatePosterDataUrl(movie.title, movie.year, 300, 450));
+    // Use movie poster if available, otherwise generate placeholder
+    const posterSrc = movie.poster || generatePosterDataUrl(movie.title, movie.year, 300, 450);
 
     selectedMovieDiv.innerHTML = `
         <h2>🎯 ${movie.title}</h2>
@@ -241,8 +241,8 @@ function displaySelectedMovie(movie) {
         </div>
     `;
 
-    // Always fetch poster from OMDb when API is configured
-    if (useOmdbApi) {
+    // Fetch poster from OMDb when API is configured and movie doesn't have a poster
+    if (useOmdbApi && !movie.poster) {
         fetchFromOMDb(movie.title, movie.year).then(fetched => {
             if (fetched && fetched.poster) {
                 const img = selectedMovieDiv.querySelector('.selected-poster');
@@ -289,11 +289,11 @@ async function displayRecommendations() {
         const genreTags = movie.genre.slice(0, 3).map(g => 
             `<span class="genre-tag">${g}</span>`
         ).join('');
-        // Always use placeholder initially if API is available, will be replaced by real poster
-        const posterSrc = useOmdbApi ? generatePosterDataUrl(movie.title, movie.year, 300, 420) : (movie.poster || generatePosterDataUrl(movie.title, movie.year, 300, 420));
+        // Use movie poster if available, otherwise generate placeholder
+        const posterSrc = movie.poster || generatePosterDataUrl(movie.title, movie.year, 300, 420);
 
         return `
-            <div class="movie-card" data-movie-id="${movie.id}" data-poster="${movie.poster ? posterSrc : ''}" onclick="selectMovieById('${movie.id}')">
+            <div class="movie-card" data-movie-id="${movie.id}" data-poster="${movie.poster || ''}" onclick="selectMovieById('${movie.id}')">
                 <div class="card-content">
                     <div class="similarity-score">
                         ${(movie.similarityScore * 100).toFixed(0)}% Match
@@ -317,13 +317,13 @@ async function displayRecommendations() {
 
     recommendationsSection.style.display = 'block';
 
-    // If OMDb is configured, fetch fresh posters for all recommendations
+    // If OMDb is configured, fetch posters for recommendations that don't have them
     if (useOmdbApi) {
         const cards = movieListDiv.querySelectorAll('.movie-card');
         cards.forEach(async (card) => {
             const movieId = card.getAttribute('data-movie-id');
-            let movie = moviesData.find(m => m.id === movieId || m.id == movieId);
-            if (!movie) return;
+            const movie = moviesData.find(m => m.id === movieId || m.id == movieId);
+            if (!movie || movie.poster) return; // Skip if movie already has poster
             try {
                 const fetched = await fetchFromOMDb(movie.title, movie.year);
                 if (fetched && fetched.poster) {

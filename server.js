@@ -18,11 +18,19 @@ app.use((req, res, next) => {
     next();
 });
 
+// Serve static files from public directory
+app.use(express.static('public', { 
+    etag: false,
+    lastModified: false,
+    maxAge: 0
+}));
+
+// Also serve from root for backward compatibility
 app.use(express.static('.', { 
     etag: false,
     lastModified: false,
     maxAge: 0
-})); // Serve static files from root directory
+}));
 
 // API Configuration
 const OMDB_API_KEY = process.env.API_KEY;
@@ -85,9 +93,16 @@ app.get('/api/search', async (req, res) => {
     }
 });
 
-// Serve the main HTML file
+// Serve the main HTML file (try public folder first, then root)
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    const publicIndex = __dirname + '/public/index.html';
+    const rootIndex = __dirname + '/index.html';
+    const fs = require('fs');
+    if (fs.existsSync(publicIndex)) {
+        res.sendFile(publicIndex);
+    } else {
+        res.sendFile(rootIndex);
+    }
 });
 
 // Start server (for local development only)
